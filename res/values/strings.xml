@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">SOS1</string>
+    <string name="action_settings">Settings</string>
+    <string name="userNameFieldTitle">User Name</string>
+    <string name="passwordFieldTitle">Password</string>
+    <string name="loginButtonTitle">Log In</string>
+    <string name="title_activity_registration">RegistrationActivity</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="RegistrationStatus_Out">"Out Registration "</string>
+    <string name="PublicIDText">Public Identity</string>
+    <string name="PublicIDEditTextContent">sip:6001@192.168.1.120</string>
+
+</resources>
