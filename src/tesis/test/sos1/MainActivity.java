@@ -21,7 +21,7 @@ public class MainActivity extends Activity {
 		String userNameString = userNameEditText.getText().toString();
 		EditText passwordEditText = (EditText) findViewById(R.id.passwordEditText);
 		String passwordString = passwordEditText.getText().toString();
-		Toast.makeText(this, "User: " + userNameString + " Pass: " + passwordString, Toast.LENGTH_SHORT).show();
+		//Toast.makeText(this, "User: " + userNameString + " Pass: " + passwordString, Toast.LENGTH_SHORT).show();
 	    
 		Intent intent = new Intent(this, RegistrationActivity.class);
 	    startActivity(intent);

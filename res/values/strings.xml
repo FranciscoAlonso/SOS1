@@ -11,5 +11,6 @@
     <string name="RegistrationStatus_Out">"Out Registration "</string>
     <string name="PublicIDText">Public Identity</string>
     <string name="PublicIDEditTextContent">sip:6001@192.168.1.120</string>
+    <string name="ButtonTextSignIn">Sign In</string>
 
 </resources>

@@ -17,17 +17,19 @@ public final class R {
          screen margins) for sw720dp devices (e.g. 10" tablets) in landscape here.
     
          */
-        public static final int activity_horizontal_margin=0x7f040000;
-        public static final int activity_vertical_margin=0x7f040001;
+        public static final int activity_horizontal_margin=0x7f050000;
+        public static final int activity_vertical_margin=0x7f050001;
     }
     public static final class drawable {
         public static final int ic_launcher=0x7f020000;
+        public static final int icon=0x7f020001;
     }
     public static final class id {
-        public static final int action_settings=0x7f080007;
+        public static final int action_settings=0x7f080008;
         public static final int loginButton=0x7f080005;
         public static final int passwordEditText=0x7f080004;
         public static final int passwordTextTitle=0x7f080003;
+        public static final int signInOutButton=0x7f080007;
         public static final int textView2=0x7f080000;
         public static final int textViewInfo=0x7f080006;
         public static final int userNameEditText=0x7f080002;
@@ -42,16 +44,18 @@ public final class R {
         public static final int registration=0x7f070001;
     }
     public static final class string {
-        public static final int PublicIDEditTextContent=0x7f050009;
-        public static final int PublicIDText=0x7f050008;
-        public static final int RegistrationStatus_Out=0x7f050007;
-        public static final int action_settings=0x7f050001;
-        public static final int app_name=0x7f050000;
-        public static final int hello_world=0x7f050006;
-        public static final int loginButtonTitle=0x7f050004;
-        public static final int passwordFieldTitle=0x7f050003;
-        public static final int title_activity_registration=0x7f050005;
-        public static final int userNameFieldTitle=0x7f050002;
+        public static final int ButtonTextSignIn=0x7f04000b;
+        public static final int PublicIDEditTextContent=0x7f04000a;
+        public static final int PublicIDText=0x7f040009;
+        public static final int RegistrationStatus_Out=0x7f040008;
+        public static final int action_settings=0x7f040002;
+        public static final int app_name=0x7f040000;
+        public static final int doubango_revision=0x7f040001;
+        public static final int hello_world=0x7f040007;
+        public static final int loginButtonTitle=0x7f040005;
+        public static final int passwordFieldTitle=0x7f040004;
+        public static final int title_activity_registration=0x7f040006;
+        public static final int userNameFieldTitle=0x7f040003;
     }
     public static final class style {
         /** 
