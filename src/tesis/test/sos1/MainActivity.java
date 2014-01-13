@@ -1,5 +1,10 @@
 package tesis.test.sos1;
 
+import org.doubango.ngn.NgnApplication;
+import org.doubango.ngn.NgnEngine;
+import org.doubango.ngn.services.INgnConfigurationService;
+import org.doubango.ngn.services.INgnSipService;
+
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
@@ -10,6 +15,17 @@ import android.view.View;
 
 public class MainActivity extends Activity {
 
+	/*private final NgnEngine mEngine;
+	private final INgnConfigurationService mConfigurationService;
+	private final INgnSipService mSipService;
+	
+	public MainActivity(){
+		mEngine = NgnEngine.getInstance();
+		mConfigurationService = mEngine.getConfigurationService();
+		mSipService = mEngine.getSipService();
+	}*/
+	
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -21,7 +37,7 @@ public class MainActivity extends Activity {
 		String userNameString = userNameEditText.getText().toString();
 		EditText passwordEditText = (EditText) findViewById(R.id.passwordEditText);
 		String passwordString = passwordEditText.getText().toString();
-		//Toast.makeText(this, "User: " + userNameString + " Pass: " + passwordString, Toast.LENGTH_SHORT).show();
+		Toast.makeText(this, "text: " + NgnApplication.getContext().toString(), Toast.LENGTH_SHORT).show();
 	    
 		Intent intent = new Intent(this, RegistrationActivity.class);
 	    startActivity(intent);
