@@ -12,12 +12,16 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import org.doubango.imsdroid.Screens.ScreenAV;
+import org.doubango.imsdroid.Services.IScreenService;
 import org.doubango.ngn.NgnEngine;
 import org.doubango.ngn.events.NgnEventArgs;
 import org.doubango.ngn.events.NgnRegistrationEventArgs;
 import org.doubango.ngn.media.NgnMediaType;
 import org.doubango.ngn.services.INgnConfigurationService;
 import org.doubango.ngn.services.INgnSipService;
+import org.doubango.ngn.sip.NgnAVSession;
+import org.doubango.ngn.sip.NgnSipStack;
 import org.doubango.ngn.utils.NgnConfigurationEntry;
 import org.doubango.ngn.utils.NgnStringUtils;
 import org.doubango.ngn.utils.NgnUriUtils;
@@ -128,7 +132,7 @@ public class RegistrationActivity extends Activity {
 	public boolean makeCall(String remoteUri, NgnMediaType mediaType){
 		/*needs:
 		 * ngnEngine
-		 * sipService
+		 * sipService -> sipstack
 		 * configuration service
 		 * screen service (not sure)
 		 * string valid uri
@@ -141,14 +145,42 @@ public class RegistrationActivity extends Activity {
 		*/
 		boolean result = false;
 		String validUri = NgnUriUtils.makeValidSipUri(remoteUri);
+		final INgnConfigurationService configurationService = mEngine.getConfigurationService();
+		
+
 		if(validUri == null){
 			Log.e(TAG, "failed to normalize sip uri '" + remoteUri + "'");
 			return result;
 		}
 		else
 		{
-			
+			remoteUri = validUri;
+			if(remoteUri.startsWith("tel:")){
+				final NgnSipStack sipStack = mEngine.getSipService().getSipStack();
+				if(sipStack != null){
+					String phoneNumber = NgnUriUtils.getValidPhoneNumber(remoteUri);
+					if(phoneNumber != null){
+						String enumDomain = configurationService.getString(
+								NgnConfigurationEntry.GENERAL_ENUM_DOMAIN, NgnConfigurationEntry.DEFAULT_GENERAL_ENUM_DOMAIN);
+						String sipUri = sipStack.dnsENUM("E2U+SIP", phoneNumber, enumDomain);
+						if(sipUri != null){
+							remoteUri = sipUri;
+						}
+					}
+				}
+			}
 		}
+		final NgnAVSession avSession = NgnAVSession.createOutgoingSession(sipService.getSipStack(), mediaType);
+		avSession.setRemotePartyUri(remoteUri); // HACK
+		screenService.show(ScreenAV.class, Long.toString(avSession.getId()));	
+		
+		// Hold the active call
+		final NgnAVSession activeCall = NgnAVSession.getFirstActiveCallAndNot(avSession.getId());
+		if(activeCall != null){
+			activeCall.holdCall();
+		}
+		
+		return avSession.makeCall(remoteUri);
 		return result;
 	}
 	public void onCallButtonClick(View view){
