@@ -26,7 +26,7 @@ public final class R {
     }
     public static final class id {
         public static final int CallButton=0x7f080008;
-        public static final int action_settings=0x7f080009;
+        public static final int action_settings=0x7f08000c;
         public static final int loginButton=0x7f080005;
         public static final int passwordEditText=0x7f080004;
         public static final int passwordTextTitle=0x7f080003;
@@ -35,10 +35,14 @@ public final class R {
         public static final int textViewInfo=0x7f080006;
         public static final int userNameEditText=0x7f080002;
         public static final int userNameTextTitle=0x7f080001;
+        public static final int view_call_incall_video_FrameLayout_local_video=0x7f08000b;
+        public static final int view_call_incall_video_FrameLayout_remote_video=0x7f080009;
+        public static final int view_call_incall_video_imageView_secure=0x7f08000a;
     }
     public static final class layout {
         public static final int activity_main=0x7f030000;
         public static final int activity_registration=0x7f030001;
+        public static final int view_call_incall_video=0x7f030002;
     }
     public static final class menu {
         public static final int main=0x7f070000;

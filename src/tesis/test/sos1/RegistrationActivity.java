@@ -7,15 +7,20 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import org.doubango.imsdroid.Screens.ScreenAV;
-import org.doubango.imsdroid.Services.IScreenService;
 import org.doubango.ngn.NgnEngine;
 import org.doubango.ngn.events.NgnEventArgs;
+import org.doubango.ngn.events.NgnInviteEventArgs;
+import org.doubango.ngn.events.NgnMediaPluginEventArgs;
 import org.doubango.ngn.events.NgnRegistrationEventArgs;
 import org.doubango.ngn.media.NgnMediaType;
 import org.doubango.ngn.services.INgnConfigurationService;
@@ -34,9 +39,27 @@ public class RegistrationActivity extends Activity {
 	private Button callButton;
 
 	private BroadcastReceiver mSipBroadCastRecv;
+	/*private BroadcastReceiver mBroadCastRecv = new  BroadcastReceiver() {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			if(NgnInviteEventArgs.ACTION_INVITE_EVENT.equals(intent.getAction())){
+				handleSipEvent(intent);
+			}
+			else if(NgnMediaPluginEventArgs.ACTION_MEDIA_PLUGIN_EVENT.equals(intent.getAction())){
+				handleMediaEvent(intent);
+			}
+		}
+	};*/
 	private final NgnEngine mEngine;
 	private final INgnConfigurationService mConfigurationService;
 	private final INgnSipService mSipService;
+	
+	private NgnAVSession mAVSession;
+	
+	private FrameLayout mViewRemoteVideoPreview;
+	private View mViewInCallVideo;
+	private LayoutInflater mInflater;
+	private RelativeLayout mMainLayout;
 	
 	public RegistrationActivity(){
 		mEngine = NgnEngine.getInstance();
@@ -146,8 +169,9 @@ public class RegistrationActivity extends Activity {
 		boolean result = false;
 		String validUri = NgnUriUtils.makeValidSipUri(remoteUri);
 		final INgnConfigurationService configurationService = mEngine.getConfigurationService();
+		final INgnSipService sipService = mEngine.getSipService();
 		
-
+		
 		if(validUri == null){
 			Log.e(TAG, "failed to normalize sip uri '" + remoteUri + "'");
 			return result;
@@ -172,16 +196,48 @@ public class RegistrationActivity extends Activity {
 		}
 		final NgnAVSession avSession = NgnAVSession.createOutgoingSession(sipService.getSipStack(), mediaType);
 		avSession.setRemotePartyUri(remoteUri); // HACK
-		screenService.show(ScreenAV.class, Long.toString(avSession.getId()));	
+		//screenService.show(ScreenAV.class, Long.toString(avSession.getId()));	
 		
 		// Hold the active call
 		final NgnAVSession activeCall = NgnAVSession.getFirstActiveCallAndNot(avSession.getId());
-		if(activeCall != null){
+		if(activeCall != null){ //OJO
 			activeCall.holdCall();
 		}
 		
+		mAVSession.setSendingVideo(true);
+		
+		Log.d(TAG, "loadInCallVideoView()");
+		if(mViewInCallVideo == null){
+			mViewInCallVideo = mInflater.inflate(R.layout.view_call_incall_video, null);
+			//mViewLocalVideoPreview = (FrameLayout)mViewInCallVideo.findViewById(R.id.view_call_incall_video_FrameLayout_local_video);
+			mViewRemoteVideoPreview = (FrameLayout)mViewInCallVideo.findViewById(R.id.view_call_incall_video_FrameLayout_remote_video);
+		}
+		/*if(mTvDuration != null){
+			synchronized(mTvDuration){
+		        mTvDuration = null;
+			}
+		}
+		mTvInfo = null;*/
+		mMainLayout.removeAllViews();
+		mMainLayout.addView(mViewInCallVideo);
+		
+		final View viewSecure = mViewInCallVideo.findViewById(R.id.view_call_incall_video_imageView_secure);
+		if(viewSecure != null){
+			viewSecure.setVisibility(mAVSession.isSecure() ? View.VISIBLE : View.INVISIBLE);
+		}
+		
+		mViewRemoteVideoPreview.removeAllViews();
+        final View remotePreview = mAVSession.startVideoConsumerPreview();
+		if(remotePreview != null){
+            final ViewParent viewParent = remotePreview.getParent();
+            if(viewParent != null && viewParent instanceof ViewGroup){
+                  ((ViewGroup)(viewParent)).removeView(remotePreview);
+            }
+            mViewRemoteVideoPreview.addView(remotePreview);
+        }
+		
 		return avSession.makeCall(remoteUri);
-		return result;
+		//return result;
 	}
 	public void onCallButtonClick(View view){
 		int tag = 1; //audio=0 video=1
